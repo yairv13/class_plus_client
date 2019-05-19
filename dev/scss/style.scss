@@ -1,0 +1,62 @@
+$primary: #000044;
+$secondary: #ffffff;
+$background: RGB(220, 220, 220);
+$foreground: RGB(250, 250, 250);
+
+* {
+	direction: rtl;
+}
+
+body {
+	background-color: lightblue;
+}
+
+h1{
+	text-align: center;
+	margin-top: 10%;
+	margin-bottom: 3.5%;
+	size: 5px;
+}
+
+h2 {
+	color: $secondary;
+	text-align: center;
+}
+
+input{
+	width: 120px;
+}
+
+label{
+	float: right;
+	margin-top: 2%;
+	margin-bottom: -0.2%;
+	color: $primary;
+}
+
+button{
+	width: 30%;
+	text-align: center;
+	margin-top: 5%;
+}
+
+.navbar-light .navbar-nav .nav-link {
+	color: white;
+}
+
+a:link {
+	color: white;
+	padding: 14px 25px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+}
+
+a:hover, a:active, a:visited {
+	font-weight: bold;
+	color: white;
+}
+
+.DayPicker{
+	position: center;
+}
