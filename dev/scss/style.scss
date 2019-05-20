@@ -13,7 +13,7 @@ body {
 
 h1{
 	text-align: center;
-	margin-top: 10%;
+	margin-top: 5%;
 	margin-bottom: 3.5%;
 	size: 5px;
 }
@@ -34,10 +34,15 @@ label{
 	color: $primary;
 }
 
-button{
+.btn-dark{
 	width: 30%;
 	text-align: center;
 	margin-top: 5%;
+}
+
+.btn-outline-info{
+	text-align: center;
+	margin-top: 85%;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -59,4 +64,8 @@ a:hover, a:active, a:visited {
 
 .DayPicker{
 	position: center;
+}
+
+.col{
+	margin-top: 1%;
 }

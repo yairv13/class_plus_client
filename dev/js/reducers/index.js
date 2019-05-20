@@ -3,6 +3,7 @@ import UserReducer from './reducer-users';
 import ActiveUserReducer from './reducer-active-user';
 import FormReducer from './reducer-form';
 import ClassesReducer from './reducer-classes';
+import HoursReducer from './reducer-hours';
 
 /*
  * We combine all reducers into a single object before updated data is dispatched (sent) to store
@@ -13,7 +14,8 @@ const allReducers = combineReducers({
     users: UserReducer,
     activeUser: ActiveUserReducer,
     form: FormReducer,
-    classes: ClassesReducer
+    classes: ClassesReducer,
+    hours: HoursReducer,
 });
 
-export default allReducers
+export default allReducers;

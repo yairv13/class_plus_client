@@ -7,7 +7,7 @@ import {submitRequest} from '../actions/index'
 /*Made for external users; the form is to be sent to the Classes Officer*/
 class RequestForm extends React.Component{
     constructor(props, context){
-        super(props, context);
+        super(props);
         this.state = {name: "", phone: "", date: "", participants:"none", length: "", hour:"", notes:""};
         this.onChange = this.onChange.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -55,7 +55,7 @@ class RequestForm extends React.Component{
                         </form>
                         <form>
                             <label>שעה מועדפת</label>
-                            <input id="hour" name="hour" className="form-control" type="time" value={this.state.hour}
+                            <input id="hour" name="hour" className="form-control" type="time"
                                    min='06:00' max='23:00' onChange={this.onChange} value={this.state.hour}/>
                         </form>
                         <form>
