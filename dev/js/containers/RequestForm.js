@@ -2,13 +2,24 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import {submitRequest} from '../actions/index'
+import {store} from '../index';
 
 /*The request form for classes*/
 /*Made for external users; the form is to be sent to the Classes Officer*/
 class RequestForm extends React.Component{
-    constructor(props, context){
+    constructor(props){
         super(props);
-        this.state = {name: "", phone: "", date: "", participants:"none", length: "", hour:"", notes:""};
+        this.state = {
+            //current form data
+            name: "",
+            phone: "",
+            date: "",
+            participants: "none",
+            length: "",
+            hour: "",
+            notes: "",
+            class_requests: store.class_requests,
+        }
         this.onChange = this.onChange.bind(this);
         this.onClick = this.onClick.bind(this);
     }
@@ -77,7 +88,7 @@ class RequestForm extends React.Component{
     }
 
     onClick(){
-            const class_request = {
+        const class_request = {
             name: this.state.name,
             phone: this.state.phone,
             date: this.state.date,
@@ -85,8 +96,12 @@ class RequestForm extends React.Component{
             length: this.state.length,
             hour: this.state.hour,
             notes: this.state.notes,
-        }
-        return this.props.submitRequest(class_request);
+        };
+        let tmp_reqs = this.state.class_requests.slice();
+        this.setState({
+            class_requests: tmp_reqs.concat(class_request)
+        }, ()=>this.props.submitRequest(this.state.class_requests));
+        return this.props.submitRequest(this.state.class_requests);
     }
     onChange(e) {
         this.setState({
@@ -99,7 +114,7 @@ class RequestForm extends React.Component{
 //      > whenever state changes, the UserList will automatically re-render
 function mapStateToProps(state) {
     return {
-        class_request: state.class_request//
+        class_requests: state.class_requests
     };
 }
 

@@ -10,7 +10,7 @@ import allReducers from './reducers';
 import App from './components/App';
 
 const logger = createLogger();
-const store = createStore(
+export const store = createStore(
     allReducers,
     applyMiddleware(thunk, promise, logger)
 );

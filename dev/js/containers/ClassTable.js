@@ -11,7 +11,7 @@ import Row from "react-bootstrap/Row";
 require('../../scss/style.scss');
 
 class ClassTable extends React.Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
         this.state = {classes: classes, hours: hours};
     }

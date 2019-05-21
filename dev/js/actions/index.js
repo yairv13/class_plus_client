@@ -1,9 +1,8 @@
-export const submitRequest = (class_request) => {
-    alert("בקשתך התקבלה ותיענה בהקדם :)");
+export const submitRequest = (class_requests) => {
     //route to google
     return {
         type: 'REQ_SENT',
-        payload: class_request
+        payload: class_requests
     }
 };
 
@@ -20,3 +19,11 @@ export const transferHours = (hours) => {
         payload: hours
     }
 };
+
+export const selectRequest = (class_request) => {
+       return {
+        type: 'REQ_SELECTED',
+        payload: class_request
+    }
+};
+

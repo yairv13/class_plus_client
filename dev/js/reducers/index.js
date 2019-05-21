@@ -1,6 +1,4 @@
 import {combineReducers} from 'redux';
-import UserReducer from './reducer-users';
-import ActiveUserReducer from './reducer-active-user';
 import FormReducer from './reducer-form';
 import ClassesReducer from './reducer-classes';
 import HoursReducer from './reducer-hours';
@@ -11,8 +9,6 @@ import HoursReducer from './reducer-hours';
  * */
 
 const allReducers = combineReducers({
-    users: UserReducer,
-    activeUser: ActiveUserReducer,
     form: FormReducer,
     classes: ClassesReducer,
     hours: HoursReducer,
