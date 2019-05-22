@@ -10,6 +10,10 @@ require('../../scss/style.scss');
 const App = () =>
 {
     store.class_requests = []; //initial setting the store requests
+    store.showList = true;
+    store.popUp = false;
+    store.cur_req = {}; //current request to be filled in the gant [from RequestList to GantForm]
+
     return (
     <BrowserRouter>
     <div>

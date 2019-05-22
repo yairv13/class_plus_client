@@ -11,17 +11,17 @@ class RequestForm extends React.Component{
         super(props);
         this.state = {
             //current form data
-            name: "",
-            phone: "",
-            date: "",
-            participants: "none",
-            length: "",
-            hour: "",
+            name: "שם כלשהו",
+            phone: "0549254485",
+            date: "2019-12-03",
+            participants: "small",
+            length: "45",
+            hour: "13:00",
             notes: "",
             class_requests: store.class_requests,
         }
         this.onChange = this.onChange.bind(this);
-        this.onClick = this.onClick.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     render(){
@@ -40,44 +40,34 @@ class RequestForm extends React.Component{
                             <label>שם מלא</label>
                             <input id="name" name="name" className="form-control" type="text" placeholder="שדה חובה" required
                                    onChange={this.onChange} value={this.state.name}/>
-                        </form>
-                        <form>
                             <label>טלפון</label>
                             <input id="phone" name="phone" className="form-control" type="tel" pattern="[0]{1}[5]{1}[0-9]{8}|[0]{1}[5]{1}[0-9]{1}-[0-9]{7}"
                                    placeholder="שדה חובה" required onChange={this.onChange} value={this.state.phone}/>
-                        </form>
-                        <form>
                             <label>תאריך</label>
-                            <input id="date" name="date" className="form-control" type="date"
+                            <input id="date" name="date" className="form-control" type="date" max="2020-01-01" min="2019-01-01"
                                    placeholder="שדה חובה" required onChange={this.onChange} value={this.state.date}/>
-                        </form>
+
                         <label>כמות משתתפים</label>
                         <select id="participants" name="participants" className="form-control"
                                 onChange={this.onChange} value={this.state.participants}>
-                            <option defaultValue="none">ללא</option>
-                            <option value="small">עד 20</option>
+                            <option defaultValue="small">עד 20</option>
                             <option value="medium">20-40</option>
                             <option value="big">40+</option>
                         </select>
-                        <form>
                             <label>אורך ההרצאה (בדקות)</label>
                             <input id="length" name="length" className="form-control" type="number" placeholder="שדה חובה" required
-                                   min="0" step="15" onChange={this.onChange} value={this.state.length}/>
-                        </form>
-                        <form>
+                                   min="30" step="15" onChange={this.onChange} value={this.state.length}/>
                             <label>שעה מועדפת</label>
                             <input id="hour" name="hour" className="form-control" type="time"
-                                   min='06:00' max='23:00' onChange={this.onChange} value={this.state.hour}/>
-                        </form>
-                        <form>
+                                   min='06:00' max='23:00' step="300" required onChange={this.onChange} value={this.state.hour}/>
                             <label>הערות נוספות</label>
                             <input id="notes" name="notes" className="form-control" type="textarea"
                                    onChange={this.onChange} value={this.state.notes}/>
+                            <button name="submit" type="button" className="btn btn-dark"
+                                    onClick={this.onSubmit}>
+                                שלח
+                            </button>
                         </form>
-                        <button name="submit" type="submit" className="btn btn-dark"
-                                onClick={this.onClick}>
-                            שלח
-                        </button>
                     </div>
                     {/*3 of three columns*/}
                     <div className="col-md">
@@ -87,7 +77,7 @@ class RequestForm extends React.Component{
             )
     }
 
-    onClick(){
+    onSubmit(){
         const class_request = {
             name: this.state.name,
             phone: this.state.phone,

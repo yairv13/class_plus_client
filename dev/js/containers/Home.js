@@ -3,7 +3,7 @@ import {Container, Row, Col} from 'react-bootstrap';
 import DatePicker from 'react-day-picker';
 import ClassTable from './ClassTable';
 import RequestList from '../containers/RequestList';
-import Button from "react-bootstrap/Button";
+import {store} from '../index';
 
 require('../../scss/style.scss');
 
@@ -19,8 +19,8 @@ class Home extends React.Component{
                 <Row>
                     <Col>
                         <DatePicker/>
-                        <RequestList/>
-                        <Button variant="outline-info" onClick={this.onClick}>+</Button>
+                        {store.showList && <RequestList/>}
+                        {/*<Button variant="outline-info" onClick={this.onClick}>+</Button>*/}
                     </Col>
                     <Col>
                         <ClassTable/>
@@ -32,7 +32,9 @@ class Home extends React.Component{
     }
 
     onClick(){
-
+        //this.setState({showList: !this.state.showList}, ()=>this.render());
+        //store.showList = !store.showList;
+        this.forceUpdate();
     }
 }
 

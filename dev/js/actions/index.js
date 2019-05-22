@@ -1,5 +1,4 @@
 export const submitRequest = (class_requests) => {
-    //route to google
     return {
         type: 'REQ_SENT',
         payload: class_requests

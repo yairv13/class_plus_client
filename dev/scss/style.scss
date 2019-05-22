@@ -41,8 +41,10 @@ label{
 }
 
 .btn-outline-info{
+	position: fixed;
 	text-align: center;
-	margin-top: 85%;
+	margin-top: 12%;
+	margin-right: -4%;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -71,8 +73,29 @@ a:hover, a:active, a:visited {
 }
 
 .list-group{
-	margin-top: 25%;
-	height: 30%;
+	margin-top: 10%;
 	overflow-y: scroll;
 	text-align: right;
+	content: 'true';
+}
+
+.btn-info{
+	margin-left: 40%;
+	text-align: center;
+}
+
+.modal-header .close {
+	margin-left: 0;
+}
+
+.modal-title{
+	text-align: center;
+}
+
+.modal-header{
+	text-align: center;
+}
+
+.modal-content{
+	margin-top: 50%;
 }
