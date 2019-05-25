@@ -10,7 +10,11 @@ require('../../scss/style.scss');
 class Home extends React.Component{
     constructor(props){
         super(props);
-        this.onClick = this.onClick.bind(this);
+        /*this.onClick = this.onClick.bind(this);*/
+        //DatePicker event handlers
+        Home.handleDayClick = Home.handleDayClick.bind(this);
+        Home.handleMonthChange = Home.handleMonthChange.bind(this);
+        store.popUp = false;
     }
 
     render() {
@@ -18,7 +22,10 @@ class Home extends React.Component{
             <Container>
                 <Row>
                     <Col>
-                        <DatePicker/>
+                        <DatePicker disabledDays={saturday}
+                                    onDayClick={Home.handleDayClick}
+                                    onMonthChange={Home.handleMonthChange}
+                        />
                         {store.showList && <RequestList/>}
                         {/*<Button variant="outline-info" onClick={this.onClick}>+</Button>*/}
                     </Col>
@@ -31,11 +38,28 @@ class Home extends React.Component{
         );
     }
 
-    onClick(){
+
+    /*onClick(){
         //this.setState({showList: !this.state.showList}, ()=>this.render());
         //store.showList = !store.showList;
         this.forceUpdate();
+    }*/
+
+    static handleDayClick(day) {
+        if(!saturday(day))
+            store.day = day;
+    }
+
+    static handleMonthChange(date) {
+        //store month change
+        store.month = date.getMonth();
     }
 }
+
+function saturday(day) {
+    return day.getDay() === 6;
+}
+
+
 
 export default Home;

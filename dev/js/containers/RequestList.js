@@ -7,11 +7,15 @@ import {store} from '../index';
 import GantForm from '../containers/GantForm';
 
 
+function nextVariant(index) {
+    return (index%2===0) ? "light" : "info"
+}
+
 class RequestList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            class_requests: store.getState().class_requests,
+            class_requests: store.class_requests,
             cur_req: store.getState().cur_req //current request to fill in gant
         };
         this.onClick = this.onClick.bind(this);
@@ -26,7 +30,10 @@ class RequestList extends React.Component {
                             {
                                 store.class_requests.map((cls_req, index) => {
                                         store.cur_req = cls_req;
-                                    return <ListGroup.Item key={index} onClick={this.onClick}>{cls_req.name}</ListGroup.Item>
+                                    return <ListGroup.Item key={index} onClick={this.onClick}
+                                            variant={nextVariant(index)}>
+                                        {cls_req.name}
+                                    </ListGroup.Item>
                                     }
                                 )}
                         </ListGroup>
@@ -37,7 +44,7 @@ class RequestList extends React.Component {
 
     onClick() {
         store.popUp = !store.popUp;
-        this.forceUpdate();
+        this.setState({state: this.state});
     }
 }
 

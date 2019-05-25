@@ -17,7 +17,7 @@ class ClassTable extends React.Component {
     }
 
     render() {
-        return <Table responsive striped bordered hover size="sm" bg="white">
+        return <Table responsive striped bordered hover size="sm">
             <thead>
             <tr>
                 <th> </th>
@@ -33,11 +33,11 @@ class ClassTable extends React.Component {
                         <td>{hour.time}</td>
                         {this.props.classes.map(function (cls) {
                             return <td key={cls.name}>
-                                <Container>
-                                    <Row id={1}> </Row>
-                                    <Row id={2}> </Row>
-                                    <Row id={3}> </Row>
-                                    <Row id={4}> </Row>
+                                <Container id={cls.name + hour.time}>
+                                    <Row id={1} style={{height:5, width:5, marginRight:15}}> </Row>
+                                    <Row id={2} style={{height:5, width:5, marginRight:15}}> </Row>
+                                    <Row id={3} style={{height:5, width:5, marginRight:15}}> </Row>
+                                    <Row id={4} style={{height:5, width:5, marginRight:15}}> </Row>
                                 </Container>
                             </td>
                         })}
@@ -46,6 +46,28 @@ class ClassTable extends React.Component {
             )}
             </tbody>
         </Table>
+    }
+
+    /*style={{backgroundColor: "#ff0000", height:5, width:5, marginRight:15}}*/
+
+    static addClass(cls, hour, hour_to){
+        //minutes of
+        //paint the cells
+        const children = [document.getElementById(cls + hour.substring(0,2)+":00").children];
+        let difference = (hour_to.substring(0,2) > hour.substring(0,2)); //diff between hours
+        let i=1;
+        while (difference > 0)
+        {
+            children.push (document.getElementById(cls + (parseInt(hour.substring(0,2)) + i) +":00").children)
+            difference--;
+            i++;
+        }
+        children.forEach((item, index) =>
+            item[index].style.backgroundColor = "#ff0000"
+        )
+        //children.style.backgroundColor = "#ff0000";
+
+        //store.yearly_class_table[store.month[store.day[cls_request.hour_from, cls_request.hour_to]]]
     }
 }
 // Get apps state and pass it as props to UserList
