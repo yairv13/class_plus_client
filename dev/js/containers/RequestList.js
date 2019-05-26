@@ -8,7 +8,16 @@ import GantForm from '../containers/GantForm';
 
 
 function nextVariant(index) {
-    return (index%2===0) ? "light" : "info"
+    switch (index%7){
+        case 0: return "light";
+        case 1: return "primary";
+        case 2: return "danger";
+        case 3: return "success";
+        case 4: return "warning";
+        case 5: return "info";
+        case 6: return "secondary";
+        case 7: return "dark";
+    }
 }
 
 class RequestList extends React.Component {

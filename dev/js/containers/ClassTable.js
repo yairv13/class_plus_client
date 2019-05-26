@@ -51,23 +51,37 @@ class ClassTable extends React.Component {
     /*style={{backgroundColor: "#ff0000", height:5, width:5, marginRight:15}}*/
 
     static addClass(cls, hour, hour_to){
-        //minutes of
-        //paint the cells
+        //stack up the required cells
         const children = [document.getElementById(cls + hour.substring(0,2)+":00").children];
-        let difference = (hour_to.substring(0,2) > hour.substring(0,2)); //diff between hours
+        let difference = (hour_to.substring(0,2) - hour.substring(0,2)); //diff between hours
         let i=1;
         while (difference > 0)
         {
-            children.push (document.getElementById(cls + (parseInt(hour.substring(0,2)) + i) +":00").children)
+            console.log(parseInt(hour.substring(0,2)) + i);
+            children.push(document.getElementById(cls + (parseInt(hour.substring(0,2)) + i) +":00").children);
             difference--;
             i++;
         }
-        children.forEach((item, index) =>
-            item[index].style.backgroundColor = "#ff0000"
-        )
-        //children.style.backgroundColor = "#ff0000";
+        //colorize & fill the gant
+        let randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+        children.forEach((item) =>
+            {
+                item[0].style.backgroundColor = randomColor;
+                item[1].style.backgroundColor = randomColor;
+                item[2].style.backgroundColor = randomColor;
+                item[3].style.backgroundColor = randomColor;
+            }
+        );
+        const hr_from = parseInt(hour.substring(3,5));
+        if (hr_from > 0)
+            children[0].item(0).style.backgroundColor = null;
+        if (hr_from > 15)
+            children[0].item(1).style.backgroundColor = null;
+        if (hr_from > 30)
+            children[0].item(2).style.backgroundColor = null;
+        if (hr_from > 45)
+            children[0].item(3).style.backgroundColor = null;
 
-        //store.yearly_class_table[store.month[store.day[cls_request.hour_from, cls_request.hour_to]]]
     }
 }
 // Get apps state and pass it as props to UserList
