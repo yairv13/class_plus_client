@@ -53,13 +53,12 @@ class GantForm extends React.Component {
                             <option value="כיתה יב">כיתה יב</option>
                         </select>
                         <input id="hour_from" name="hour_from" className="form-control" type="time"
-                               required onChange={this.onChange} value={this.state.hour_from} max={this.state.hour_to}
-                               step="1500"/>
+                               required onChange={this.onChange} value={this.state.hour_from}
+                               step="900"/>
                         <input id="hour_to" name="hour_to" className="form-control" type="time"
                                required onChange={this.onChange} value={this.state.hour_to} min={this.state.hour_from}
-                               step="1500"/>
+                               step="900"/>
                     </form>
-
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -76,6 +75,7 @@ class GantForm extends React.Component {
     }
 
     onClick(){
+        /*TODO: check if class is taken then*/
         //fill gant in day&hours
         ClassTable.addClass(document.getElementById("classes").value,
             document.getElementById("hour_from").value,

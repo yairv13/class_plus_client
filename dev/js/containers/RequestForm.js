@@ -63,7 +63,7 @@ class RequestForm extends React.Component{
                             <label>הערות נוספות</label>
                             <input id="notes" name="notes" className="form-control" type="textarea"
                                    onChange={this.onChange} value={this.state.notes}/>
-                            <button name="submit" type="button" className="btn btn-dark"
+                            <button name="button" type="button" className="btn btn-dark"
                                     onClick={this.onSubmit}>
                                 שלח
                             </button>
