@@ -51,7 +51,7 @@ class ClassTable extends React.Component {
                 )
             )}
             </tbody>
-            <ReactTooltip/>
+            <ReactTooltip />
         </Table>
     }
 
@@ -72,9 +72,11 @@ class ClassTable extends React.Component {
                 for(let i=0; i<4; i++)
                 {
                     //TODO: fix this shite
-                    //if (item[i].style.backgroundColor === "#00c8fa")
+                    if (!item[i].style.backgroundRepeat) {
                         item[i].style.backgroundColor = randomColor;
-                    //else console.log("lol");
+                        item[i].style.backgroundRepeat = true;
+                    }
+                    else console.log("lol");
                 }
             }
         );

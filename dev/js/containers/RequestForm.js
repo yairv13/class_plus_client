@@ -59,7 +59,7 @@ class RequestForm extends React.Component{
                                    min="30" step="15" onChange={this.onChange} value={this.state.length}/>
                             <label>שעה מועדפת</label>
                             <input id="hour" name="hour" className="form-control" type="time"
-                                   min='06:00' max='23:00' step="900" required onChange={this.onChange} value={this.state.hour}/>
+                                   min='09:00' max='23:00' step="900" required onChange={this.onChange} value={this.state.hour}/>
                             <label>הערות נוספות</label>
                             <input id="notes" name="notes" className="form-control" type="textarea"
                                    onChange={this.onChange} value={this.state.notes}/>
