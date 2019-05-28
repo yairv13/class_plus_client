@@ -4,17 +4,12 @@ import RequestForm from '../containers/RequestForm';
 import Nav_bar from './Nav_bar';
 import {BrowserRouter, Route} from "react-router-dom"
 import {store} from "../index";
-import ClassTable from '../containers/ClassTable';
-import classes from '../reducers/reducer-classes';
-import hours from '../reducers/reducer-hours';
 
 require('../../scss/style.scss');
 
 const App = () =>
 {
     setStoreValues();
-
-
     return (
     <BrowserRouter>
     <div>

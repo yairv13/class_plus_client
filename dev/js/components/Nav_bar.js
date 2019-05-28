@@ -17,6 +17,6 @@ const Nav_bar = () => {
             </Navbar.Collapse>
         </Navbar>
     );
-}
+};
 
 export default Nav_bar;
