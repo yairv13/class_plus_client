@@ -4,10 +4,8 @@ import {store} from '../index'
 export const submitRequest = (class_request) => {
     axios.post('http://localhost:8000/api/events/all/',
         {
-            params: {
                 name:class_request.name, phone:class_request.phone, date:class_request.date,
                 hour:class_request.hour, description:class_request.description
-            }
         }, store.config
     )
         .then(response => {

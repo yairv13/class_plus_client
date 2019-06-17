@@ -85,11 +85,6 @@ class RequestForm extends React.Component{
             hour: this.state.hour,
             description: this.state.description,
         };
-        /*let tmp_reqs = this.state.class_requests.slice();
-        this.setState({
-            class_requests: tmp_reqs.concat(class_request)*/
-        //}, ()=>
-        //this.props.submitRequest(this.state.class_requests);
         return this.props.submitRequest(class_request);
     }
     onChange(e) {
@@ -103,7 +98,7 @@ class RequestForm extends React.Component{
 //      > whenever state changes, the UserList will automatically re-render
 function mapStateToProps(state) {
     return {
-        //class_requests: state.class_requests
+
     };
 }
 
