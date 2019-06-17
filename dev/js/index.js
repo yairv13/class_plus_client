@@ -13,6 +13,7 @@ const logger = createLogger();
 export const store = createStore(
     allReducers,
     applyMiddleware(thunk, promise, logger)
+
 );
 
 ReactDOM.render(

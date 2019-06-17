@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import {submitRequest} from '../actions/index'
-import {store} from '../index';
 
 /*The request form for classes*/
 /*Made for external users; the form is to be sent to the Classes Officer*/
@@ -17,9 +16,8 @@ class RequestForm extends React.Component{
             participants: "small",
             length: "45",
             hour: "13:00",
-            notes: "",
-            class_requests: store.class_requests,
-        }
+            description: "",
+        };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -36,13 +34,13 @@ class RequestForm extends React.Component{
 
                         <h1>טופס בקשת כיתה</h1>
                         <h2>קמפוס בסמ"ח</h2>
-                        <form>
+                        <form name="request_form">
                             <label>שם מלא</label>
                             <input id="name" name="name" className="form-control" type="text" placeholder="שדה חובה" required
-                                   onChange={this.onChange} value={this.state.name}/>
+                                   onChange={this.onChange} value={this.state.name} maxLength='20'/>
                             <label>טלפון</label>
                             <input id="phone" name="phone" className="form-control" type="tel" pattern="[0]{1}[5]{1}[0-9]{8}|[0]{1}[5]{1}[0-9]{1}-[0-9]{7}"
-                                   placeholder="שדה חובה" required onChange={this.onChange} value={this.state.phone}/>
+                                   placeholder="שדה חובה" required onChange={this.onChange} value={this.state.phone} maxLength='20'/>
                             <label>תאריך</label>
                             <input id="date" name="date" className="form-control" type="date" max="2020-01-01" min="2019-01-01"
                                    placeholder="שדה חובה" required onChange={this.onChange} value={this.state.date}/>
@@ -56,13 +54,13 @@ class RequestForm extends React.Component{
                         </select>
                             <label>אורך ההרצאה (בדקות)</label>
                             <input id="length" name="length" className="form-control" type="number" placeholder="שדה חובה" required
-                                   min="30" step="15" onChange={this.onChange} value={this.state.length}/>
+                                   min="30" step="15" onChange={this.onChange} value={this.state.length} max="360"/>
                             <label>שעה מועדפת</label>
                             <input id="hour" name="hour" className="form-control" type="time"
                                    min='09:00' max='23:00' step="900" required onChange={this.onChange} value={this.state.hour}/>
-                            <label>הערות נוספות</label>
-                            <input id="notes" name="notes" className="form-control" type="textarea"
-                                   onChange={this.onChange} value={this.state.notes}/>
+                            <label>נושא השיעור</label>
+                            <input id="description" name="description" className="form-control" type="textarea"
+                                   onChange={this.onChange} value={this.state.description} maxLength="20"/>
                             <button name="button" type="button" className="btn btn-dark"
                                     onClick={this.onSubmit}>
                                 שלח
@@ -85,13 +83,14 @@ class RequestForm extends React.Component{
             participants: this.state.participants,
             length: this.state.length,
             hour: this.state.hour,
-            notes: this.state.notes,
+            description: this.state.description,
         };
-        let tmp_reqs = this.state.class_requests.slice();
+        /*let tmp_reqs = this.state.class_requests.slice();
         this.setState({
-            class_requests: tmp_reqs.concat(class_request)
-        }, ()=>this.props.submitRequest(this.state.class_requests));
-        return this.props.submitRequest(this.state.class_requests);
+            class_requests: tmp_reqs.concat(class_request)*/
+        //}, ()=>
+        //this.props.submitRequest(this.state.class_requests);
+        return this.props.submitRequest(class_request);
     }
     onChange(e) {
         this.setState({
@@ -104,7 +103,7 @@ class RequestForm extends React.Component{
 //      > whenever state changes, the UserList will automatically re-render
 function mapStateToProps(state) {
     return {
-        class_requests: state.class_requests
+        //class_requests: state.class_requests
     };
 }
 

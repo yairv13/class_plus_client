@@ -7,5 +7,7 @@
     "development": {
       "presets": []
     }
-  }
+  },
+  "plugins": ["transform-async-to-generator"]
+
 }
