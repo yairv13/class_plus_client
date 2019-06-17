@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {store} from '../index';
-import ClassTable from '../containers/ClassTable';
+import axios from 'axios';
 
 class GantForm extends React.Component {
     constructor(props) {
@@ -77,9 +77,14 @@ class GantForm extends React.Component {
     onClick(){
         /*TODO: check if class is taken then*/
         //fill gant in day&hours
-        ClassTable.addClass(document.getElementById("classes").value,
+        this.addClass(
+            document.getElementById("name").value,
+            document.getElementById("phone").value,
+            document.getElementById("date").value,
+            document.getElementById("classes").value,
             document.getElementById("hour_from").value,
-            document.getElementById("hour_to").value);
+            document.getElementById("hour_to").value,
+            document.getElementById("description").value);
         //remove request from request list
         removeItem();
         //close popup gant form
@@ -105,18 +110,25 @@ const calcHourTo = () => {
         minutes-=60;
     }
     return hours.toString()+':'+minutes.toString();
-}
+};
 
 
 function removeItem() {
-    for(let i=0; i<store.class_requests.length; i++)
-    {
-        if(store.class_requests[i]===store.cur_req) {
-            console.log("splicing" + store.class_requests[i]);
-            store.class_requests.splice(i, 1);
-            break;
-        }
-    }
+    console.log('delete event');
+    //token authentication in HTTP header
+    const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
+    const config = {
+        headers: {'Authorization': 'Token ' + token}
+    };
+    axios.delete('http://localhost:8000/api/events/all/',
+    /*{params: store.cur_req.name},*/ config
+    )
+        .then(response => {
+           console.log(store.cur_req.name + "reqest dealt");
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 export default GantForm;

@@ -1,9 +1,6 @@
 export default function () {
     return [
         {
-            time: "08:00"
-        },
-        {
             time: "09:00"
         },
         {

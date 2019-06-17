@@ -12,9 +12,16 @@ class Home extends React.Component{
         super(props);
         /*this.onClick = this.onClick.bind(this);*/
         //DatePicker event handlers
-        Home.handleDayClick = Home.handleDayClick.bind(this);
-        Home.handleMonthChange = Home.handleMonthChange.bind(this);
+        this.handleDayClick = this.handleDayClick.bind(this);
+        this.handleMonthChange = this.handleMonthChange.bind(this);
+        //GantForm render flag
         store.popUp = false;
+        //set state
+        const today = new Date();
+        this.state = {
+            current_day: today.getDay(),
+            current_month: today.getMonth()
+        }
     }
 
     render() {
@@ -23,8 +30,8 @@ class Home extends React.Component{
                 <Row>
                     <Col>
                         <DatePicker disabledDays={saturday}
-                                    onDayClick={Home.handleDayClick}
-                                    onMonthChange={Home.handleMonthChange}
+                                    onDayClick={this.handleDayClick}
+                                    onMonthChange={this.handleMonthChange}
                         />
                         {store.showList && <RequestList/>}
                         {/*<Button variant="outline-info" onClick={this.onClick}>+</Button>*/}
@@ -45,21 +52,23 @@ class Home extends React.Component{
         this.forceUpdate();
     }*/
 
-    static handleDayClick(day) {
-        if(!saturday(day))
-            store.day = day;
+    handleDayClick(day) {
+        if(!saturday(day)) {
+            //set current day state
+            this.setState({current_day: day});
+            //refill table
+            ClassTable.fillTable();
+        }
     }
 
-    static handleMonthChange(date) {
-        //store month change
-        store.month = date.getMonth();
+    handleMonthChange(date) {
+        //set month change
+        this.setState({current_month: date.getMonth()});
     }
 }
 
 function saturday(day) {
     return day.getDay() === 6;
 }
-
-
 
 export default Home;
