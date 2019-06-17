@@ -34,7 +34,7 @@ class RequestForm extends React.Component{
 
                         <h1>טופס בקשת כיתה</h1>
                         <h2>קמפוס בסמ"ח</h2>
-                        <form name="request_form">
+                        <form name="request_form" action="http://localhost:3000" method="get">
                             <label>שם מלא</label>
                             <input id="name" name="name" className="form-control" type="text" placeholder="שדה חובה" required
                                    onChange={this.onChange} value={this.state.name} maxLength='20'/>
@@ -61,7 +61,7 @@ class RequestForm extends React.Component{
                             <label>נושא השיעור</label>
                             <input id="description" name="description" className="form-control" type="textarea"
                                    onChange={this.onChange} value={this.state.description} maxLength="20"/>
-                            <button name="button" type="button" className="btn btn-dark"
+                            <button name="button" type="submit" className="btn btn-dark"
                                     onClick={this.onSubmit}>
                                 שלח
                             </button>
