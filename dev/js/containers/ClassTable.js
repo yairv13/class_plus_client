@@ -32,30 +32,6 @@ class ClassTable extends React.Component {
         return this.state.class_table; //render class table
     }
 
-    addClass(name, phone, date, _class, hour, hour_to, description) {
-        //store event in DB:
-        //token authentication in HTTP header
-        const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
-        const config = {
-            headers: {'Authorization': 'Token ' + token}
-        };
-        axios.post('http://localhost:8000/api/events/add/', {
-            params: {
-                name:name, phone:phone, date:date, _class:_class,
-                hour:hour, hour_to:hour_to, description:description
-            }
-        }, config)
-        //fill table according changes
-            .then(response => {
-                //TODO: just add 1 event instead refilling the whole table
-                console.log('addClass: ' + response.data);
-                this.fillTable();
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
     buildTable() {
         return (
             <Table responsive striped bordered hover size="sm">

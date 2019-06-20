@@ -13,8 +13,7 @@ class GantForm extends React.Component {
             date: store.cur_req.date,
             classes: store.cur_req.classes,
             hour_from: store.cur_req.hour,
-            hour_to: calcHourTo(),
-            show: true
+            hour_to: store.cur_req.hour_to,
         };
         this.onChange = this.onChange.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -23,7 +22,7 @@ class GantForm extends React.Component {
 
     render() {
         return (
-            <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal show={store.popUp} onHide={this.handleClose}>
                 <Modal.Header closeButton name="close" onClick={this.close}>
                     <Modal.Title>הקצאת כיתה</Modal.Title>
                 </Modal.Header>
@@ -91,27 +90,36 @@ class GantForm extends React.Component {
         this.handleClose();
     }
 
-
+    //unshow Modal
     handleClose() {
-        store.popUp = !store.popUp;
-        store.showList = true;
-        this.setState({ show: false });
+        store.popUp = false;
+        this.setState({ state: this.state });
+    }
+
+    addClass(name, phone, date, _class, hour, hour_to, description) {
+        //store event in DB:
+        //token authentication in HTTP header
+        const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
+        const config = {
+            headers: {'Authorization': 'Token ' + token}
+        };
+        axios.post('http://localhost:8000/api/events/add/', {
+            params: {
+                name:name, phone:phone, date:date, _class:_class,
+                hour:hour, hour_to:hour_to, description:description
+            }
+        }, config)
+        //fill table according changes
+            .then(response => {
+                //TODO: just add 1 event instead refilling the whole table
+                console.log('addClass: ' + response.data);
+                this.fillTable();
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 }
-
-const calcHourTo = () => {
-    const hour_send = store.cur_req.hour;
-    let hours = parseInt(hour_send.substring(0,2));
-    let minutes = parseInt(hour_send.substring(3,5));
-    minutes += parseInt(store.cur_req.length);
-    while (minutes >= 60)
-    {
-        hours++;
-        minutes-=60;
-    }
-    return hours.toString()+':'+minutes.toString();
-};
-
 
 function removeItem() {
     console.log('delete event');

@@ -5,7 +5,7 @@ export const submitRequest = (class_request) => {
     axios.post('http://localhost:8000/api/events/all/',
         {
                 name:class_request.name, phone:class_request.phone, date:class_request.date,
-                hour:class_request.hour, description:class_request.description
+                hour:class_request.hour, hour_to:class_request.hour_to ,description:class_request.description
         }, store.config
     )
         .then(response => {

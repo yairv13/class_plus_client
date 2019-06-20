@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from "redux";
 import {submitRequest} from '../actions/index'
+import {store} from '../index';
 
 /*The request form for classes*/
 /*Made for external users; the form is to be sent to the Classes Officer*/
@@ -12,10 +13,10 @@ class RequestForm extends React.Component{
             //current form data
             name: "שם כלשהו",
             phone: "0549254485",
-            date: "2019-12-03",
+            date: store.today,
             participants: "small",
-            length: "45",
-            hour: "13:00",
+            hour: "09:00",
+            hour_to: "09:45",
             description: "",
         };
         this.onChange = this.onChange.bind(this);
@@ -34,7 +35,7 @@ class RequestForm extends React.Component{
 
                         <h1>טופס בקשת כיתה</h1>
                         <h2>קמפוס בסמ"ח</h2>
-                        <form name="request_form" action="http://localhost:3000" method="get">
+                        <form id="request_form" name="request_form" action="http://localhost:3000" method="get">
                             <label>שם מלא</label>
                             <input id="name" name="name" className="form-control" type="text" placeholder="שדה חובה" required
                                    onChange={this.onChange} value={this.state.name} maxLength='20'/>
@@ -42,7 +43,7 @@ class RequestForm extends React.Component{
                             <input id="phone" name="phone" className="form-control" type="tel" pattern="[0]{1}[5]{1}[0-9]{8}|[0]{1}[5]{1}[0-9]{1}-[0-9]{7}"
                                    placeholder="שדה חובה" required onChange={this.onChange} value={this.state.phone} maxLength='20'/>
                             <label>תאריך</label>
-                            <input id="date" name="date" className="form-control" type="date" max="2020-01-01" min="2019-01-01"
+                            <input id="date" name="date" className="form-control" type="date" max={store.next_year} min={store.today}
                                    placeholder="שדה חובה" required onChange={this.onChange} value={this.state.date}/>
 
                         <label>כמות משתתפים</label>
@@ -52,15 +53,15 @@ class RequestForm extends React.Component{
                             <option value="medium">20-40</option>
                             <option value="big">40+</option>
                         </select>
-                            <label>אורך ההרצאה (בדקות)</label>
-                            <input id="length" name="length" className="form-control" type="number" placeholder="שדה חובה" required
-                                   min="30" step="15" onChange={this.onChange} value={this.state.length} max="360"/>
-                            <label>שעה מועדפת</label>
-                            <input id="hour" name="hour" className="form-control" type="time"
+                            <label>שעת התחלה</label>
+                            <input id="hour" name="hour" className="form-control" type="time" placeholder="שדה חובה"
                                    min='09:00' max='23:00' step="900" required onChange={this.onChange} value={this.state.hour}/>
+                            <label>שעת סיום</label>
+                            <input id="hour_to" name="hour_to" className="form-control" type="time" placeholder="שדה חובה" required
+                                   min={this.state.hour} max='23:59' step="900" onChange={this.onChange} value={this.state.hour_to}/>
                             <label>נושא השיעור</label>
                             <input id="description" name="description" className="form-control" type="textarea"
-                                   onChange={this.onChange} value={this.state.description} maxLength="20"/>
+                                   onChange={this.onChange} value={this.state.description} maxLength="40"/>
                             <button name="button" type="submit" className="btn btn-dark"
                                     onClick={this.onSubmit}>
                                 שלח
@@ -81,8 +82,8 @@ class RequestForm extends React.Component{
             phone: this.state.phone,
             date: this.state.date,
             participants: this.state.participants,
-            length: this.state.length,
             hour: this.state.hour,
+            hour_to: this.state.hour_to,
             description: this.state.description,
         };
         return this.props.submitRequest(class_request);
@@ -97,9 +98,7 @@ class RequestForm extends React.Component{
 // Get apps state and pass it as props to UserList
 //      > whenever state changes, the UserList will automatically re-render
 function mapStateToProps(state) {
-    return {
-
-    };
+    return {};
 }
 
 // Get actions and pass them as props to to UserList

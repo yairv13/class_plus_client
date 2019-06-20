@@ -21,18 +21,19 @@ class RequestList extends React.Component {
     //before rendering - set the state with the latest unassigned requests
     async componentWillMount() {
         await this.getUnassignedRequests().then(req => {
-           this.setState({unassigned_requests: req});
-            console.log(this.state.unassigned_requests);
+            this.setState({unassigned_requests: req});
         });
     }
 
-    //render the RequestList at the right corner - if exists
+    //render the RequestList at the right corner - if it isn't empty
+    //store.popUp flags true on class click for Modal pop up
     render() {
-        if(this.state.unassigned_requests)
+        console.log(this.state.unassigned_requests);
+        if (this.state.unassigned_requests) //GET request ended
             return (
                 <div>
                     {store.popUp && <GantForm/>}
-                    <ListGroup>
+                    {this.RequestsNotEmpty() && <ListGroup>
                         {
                             this.state.unassigned_requests.map((cls_req, index) => {
                                     store.cur_req = cls_req;
@@ -41,8 +42,10 @@ class RequestList extends React.Component {
                                         {cls_req.name}
                                     </ListGroup.Item>
                                 }
-                            )}
+                            )
+                        }
                     </ListGroup>
+                    }
                 </div>
             );
         else
@@ -51,26 +54,34 @@ class RequestList extends React.Component {
 
 
     onClick() {
-        store.popUp = !store.popUp;
+        store.popUp = true;
         this.setState({state: this.state});
     }
 
+    //GET request for all unassigned events from DB
     async getUnassignedRequests() {
         let reqs = null;
         //get all unappointed class requests:
         await axios.get('http://localhost:8000/api/events/all/', store.config)
-            .then(req => { reqs = req.data})
-                .catch(error => {
-                    console.log('Error getting unassigned requests, ' , error);
-                    return [];
-                });
+            .then(req => {
+                reqs = req.data
+            })
+            .catch(error => {
+                console.log('Error getting unassigned requests, ', error);
+                return [];
+            });
         return reqs;
+    }
+
+    //return if the unassigned request list isn't empty
+    RequestsNotEmpty() {
+        return (this.state.unassigned_requests.length !== 0);
     }
 }
 
 //select next label color
 function nextVariant(index) {
-    switch (index % 7) {
+    switch (index + 3 % 7) {
         case 0:
             return "light";
         case 1:
