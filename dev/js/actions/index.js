@@ -2,17 +2,17 @@ import axios from 'axios';
 import {store} from '../index'
 
 export const submitRequest = (class_request) => {
-    axios.post('http://localhost:8000/api/events/all/',
+    axios.post('http://localhost:8000/api/unassigned_events/',
         {
-                name:class_request.name, phone:class_request.phone, date:class_request.date,
-                hour:class_request.hour, hour_to:class_request.hour_to ,description:class_request.description
+            name:class_request.name, phone:class_request.phone, date:class_request.date,
+            hour:class_request.hour, hour_to:class_request.hour_to ,description:class_request.description
         }, store.config
     )
         .then(response => {
             console.log(response);
         })
         .catch(error => {
-            console.log(error);
+            alert(error);
         });
     return {
         type: 'REQ_SENT',

@@ -49,20 +49,20 @@ class RequestList extends React.Component {
                 </div>
             );
         else
-            return (<span>Loading...</span>);
+            return (<span>טוען...</span>);
     }
 
-
     onClick() {
-        store.popUp = true;
-        this.setState({state: this.state});
+        store.popUp = true; //pop up the gant form
+        //store.cur_req = this; //update cur_req to clicked item
+        this.setState({state: this.state}); //rerender page
     }
 
     //GET request for all unassigned events from DB
     async getUnassignedRequests() {
         let reqs = null;
         //get all unappointed class requests:
-        await axios.get('http://localhost:8000/api/events/all/', store.config)
+        await axios.get('http://localhost:8000/api/unassigned_events/', store.config)
             .then(req => {
                 reqs = req.data
             })

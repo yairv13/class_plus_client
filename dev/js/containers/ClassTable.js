@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios'
+import {store} from '../index'
 
 require('../../scss/style.scss');
 
@@ -73,21 +74,15 @@ class ClassTable extends React.Component {
         //set all today's events json
         let data = {};
         //get all today's events
-        //token authentication in HTTP header
-        const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
-        const config = {
-            headers: {'Authorization': 'Token ' + token}
-        };
-        axios.get('http://localhost:8000/api/events/get/',
+        axios.get('http://localhost:8000/api/assigned_events/',
             // {
             //     params: {
             //         day: this.props.current_day,
             //         month: this.props.current_month
             //     }
             // },
-            config)
+            store.config)
             .then(response => {
-                //console.log('fillTable: ' + response.data)
                 data = response.data;
             })
             .catch(error => {

@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {store} from '../index';
 import axios from 'axios';
+import fillTable from 'ClassTable';
 
 class GantForm extends React.Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class GantForm extends React.Component {
             name: store.cur_req.name,
             phone: store.cur_req.phone,
             date: store.cur_req.date,
-            classes: store.cur_req.classes,
+            classes: "כיתה א", //default value - cls_id = 1
             hour_from: store.cur_req.hour,
             hour_to: store.cur_req.hour_to,
         };
@@ -73,70 +74,100 @@ class GantForm extends React.Component {
         });
     }
 
-    onClick(){
-        /*TODO: check if class is taken then*/
-        //fill gant in day&hours
-        this.addClass(
-            document.getElementById("name").value,
-            document.getElementById("phone").value,
-            document.getElementById("date").value,
-            document.getElementById("classes").value,
-            document.getElementById("hour_from").value,
-            document.getElementById("hour_to").value,
-            document.getElementById("description").value);
+    onClick() {
+        //if place isn't taken - fill gant with day&hours
+        if (this.addClass(
+            this.state.name,
+            this.state.phone,
+            this.state.date,
+            this.state.classes,
+            this.state.hour_from,
+            this.state.hour_to,
+            store.cur_req.description
+        ) === false)
+        //prevent request removal from RequestList on the corner
+        //don't close the GantForm
+            return;
         //remove request from request list
-        removeItem();
+        this.removeItem();
         //close popup gant form
         this.handleClose();
     }
 
     //unshow Modal
     handleClose() {
-        store.popUp = false;
-        this.setState({ state: this.state });
+        store.popUp = false; //flag to not render GantForm
+        this.setState({state: this.state}); //refresh and unrender component
     }
 
     addClass(name, phone, date, _class, hour, hour_to, description) {
         //store event in DB:
-        //token authentication in HTTP header
-        const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
-        const config = {
-            headers: {'Authorization': 'Token ' + token}
-        };
-        axios.post('http://localhost:8000/api/events/add/', {
-            params: {
-                name:name, phone:phone, date:date, _class:_class,
-                hour:hour, hour_to:hour_to, description:description
-            }
-        }, config)
-        //fill table according changes
+        const cls_id = this.getClassID(_class); //convert class name to its cls_id
+        axios.post('http://localhost:8000/api/assigned_events/', {
+            name: name, phone: phone, date: date, cls_id: cls_id,
+            hour: hour, hour_to: hour_to, description: description
+        }, store.config)
+        //if place is already taken
+            .catch(error => {
+                alert("רשומה תפוסה, אנא נסו שנית.");
+                return false;
+            })
+            //else - fill table according changes
             .then(response => {
-                //TODO: just add 1 event instead refilling the whole table
-                console.log('addClass: ' + response.data);
-                this.fillTable();
+                fillTable();
+            });
+    }
+
+
+//return cls_id by its name
+    getClassID(_class) {
+        switch (_class) {
+            case "כיתה א":
+                return 1;
+            case "כיתה ב":
+                return 2;
+            case "כיתה ג":
+                return 3;
+            case "כיתה ד":
+                return 4;
+            case "כיתה ה":
+                return 5;
+            case "כיתה ו":
+                return 6;
+            case "כיתה ז":
+                return 7;
+            case "כיתה ח":
+                return 8;
+            case "כיתה ט":
+                return 9;
+            case "כיתה י":
+                return 10;
+            case "כיתה יא":
+                return 11;
+            case "כיתה יב":
+                return 12;
+            case "כיתה יג":
+                return 13;
+            case "כיתה יד":
+                return 14;
+            default:
+                return 1;
+        }
+    }
+
+    removeItem() {
+        //delete request from cornered RequestList
+        axios.delete('http://localhost:8000/api/unassigned_events/' +
+            store.cur_req.date + '/' + store.cur_req.cls_id + '/',
+            store.config)
+            .then(response => {
+                console.log(store.cur_req.name + "request dealt");
             })
             .catch(error => {
                 console.log(error);
             });
     }
-}
 
-function removeItem() {
-    console.log('delete event');
-    //token authentication in HTTP header
-    const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
-    const config = {
-        headers: {'Authorization': 'Token ' + token}
-    };
-    axios.delete('http://localhost:8000/api/events/all/',
-    /*{params: store.cur_req.name},*/ config
-    )
-        .then(response => {
-           console.log(store.cur_req.name + "reqest dealt");
-        })
-        .catch(error => {
-            console.log(error);
-        });
 }
 
 export default GantForm;
