@@ -35,6 +35,7 @@ function setStoreValues() {
     store.today = new Date().toISOString().split("T")[0]; //current day
     store.next_year = (parseInt(store.today.substring(0,4))+1).toString() +
         store.today.substring(4,10); //today next year
+    store.selectedDate = store.today;
 }
 
 export default App;

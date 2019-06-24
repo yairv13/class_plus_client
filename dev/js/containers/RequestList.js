@@ -28,7 +28,6 @@ class RequestList extends React.Component {
     //render the RequestList at the right corner - if it isn't empty
     //store.popUp flags true on class click for Modal pop up
     render() {
-        console.log(this.state.unassigned_requests);
         if (this.state.unassigned_requests) //GET request ended
             return (
                 <div>
