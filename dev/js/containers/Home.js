@@ -4,24 +4,27 @@ import DatePicker from 'react-day-picker';
 import ClassTable from './ClassTable';
 import RequestList from '../containers/RequestList';
 import {store} from '../index';
+import {fillTable, refreshTable} from "../actions";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import ReactTooltip from 'react-tooltip'
 
 require('../../scss/style.scss');
 
 class Home extends React.Component{
     constructor(props){
         super(props);
-        /*this.onClick = this.onClick.bind(this);*/
         //DatePicker event handlers
         this.handleDayClick = this.handleDayClick.bind(this);
         this.handleMonthChange = this.handleMonthChange.bind(this);
         //GantForm render flag
         store.popUp = false;
         //set state
-        const today = new Date();
         this.state = {
-            current_day: today.getDay(),
-            current_month: today.getMonth()
-        }
+            current_day: store.today.substring(5,7),
+            current_month: store.today.substring(8,10),
+            current_year: store.today.substring(0,5),
+        };
     }
 
     render() {
@@ -33,11 +36,11 @@ class Home extends React.Component{
                                     onDayClick={this.handleDayClick}
                                     onMonthChange={this.handleMonthChange}
                         />
-                        {store.showList && <RequestList/>}
-                        {/*<Button variant="outline-info" onClick={this.onClick}>+</Button>*/}
+                        {<RequestList/>}
                     </Col>
                     <Col>
                         <ClassTable/>
+                        <ReactTooltip type="warning"/>
                     </Col>
                     <Col> </Col>
                 </Row>
@@ -45,19 +48,16 @@ class Home extends React.Component{
         );
     }
 
-
-    /*onClick(){
-        //this.setState({showList: !this.state.showList}, ()=>this.render());
-        //store.showList = !store.showList;
-        this.forceUpdate();
-    }*/
+    componentDidMount(){
+        //this.props.refreshTable();
+    }
 
     handleDayClick(day) {
-        if(!saturday(day)) {
+        if (!saturday(day)) {
             //set current day state
             this.setState({current_day: day});
-            //refill table
-            ClassTable.fillTable();
+            store.selectedDate = DateFormat(day);
+            this.props.refreshTable();
         }
     }
 
@@ -71,4 +71,27 @@ function saturday(day) {
     return day.getDay() === 6;
 }
 
-export default Home;
+/**
+ * @return {string}
+ */
+function DateFormat(day) {
+    return new Date(day).toISOString().split("T")[0];
+}
+
+// Get apps state and pass it as props to UserList
+//      > whenever state changes, the UserList will automatically re-render
+function mapStateToProps(state) {
+    return {
+        //YYYY-MM-DD format of DatePicker's selected date
+        date: state.current_year+'-'+state.current_month+'-'+state.current_day,
+    };
+}
+
+// Get actions and pass them as props to to UserList
+//      > now UserList has this.props.selectUser
+function matchDispatchToProps(dispatch) {
+    return bindActionCreators({fillTable, refreshTable}, dispatch);
+}
+
+//      > UserList is now aware of state and actions
+export default connect(mapStateToProps, matchDispatchToProps)(Home);

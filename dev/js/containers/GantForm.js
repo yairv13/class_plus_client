@@ -3,6 +3,9 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {store} from '../index';
 import axios from 'axios';
+import {fillTable, getClassID} from "../actions/index";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
 class GantForm extends React.Component {
     constructor(props) {
@@ -11,10 +14,9 @@ class GantForm extends React.Component {
             name: store.cur_req.name,
             phone: store.cur_req.phone,
             date: store.cur_req.date,
-            classes: store.cur_req.classes,
+            classes: "כיתה א", //default value - cls_id = 1
             hour_from: store.cur_req.hour,
-            hour_to: calcHourTo(),
-            show: true
+            hour_to: store.cur_req.hour_to,
         };
         this.onChange = this.onChange.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -23,7 +25,7 @@ class GantForm extends React.Component {
 
     render() {
         return (
-            <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal show={store.popUp} onHide={this.handleClose}>
                 <Modal.Header closeButton name="close" onClick={this.close}>
                     <Modal.Title>הקצאת כיתה</Modal.Title>
                 </Modal.Header>
@@ -51,6 +53,8 @@ class GantForm extends React.Component {
                             <option value="כיתה י">כיתה י</option>
                             <option value="כיתה יא">כיתה יא</option>
                             <option value="כיתה יב">כיתה יב</option>
+                            <option value="כיתה יג">כיתה יג</option>
+                            <option value="כיתה יד">כיתה יד</option>
                         </select>
                         <input id="hour_from" name="hour_from" className="form-control" type="time"
                                required onChange={this.onChange} value={this.state.hour_from}
@@ -74,61 +78,84 @@ class GantForm extends React.Component {
         });
     }
 
-    onClick(){
-        /*TODO: check if class is taken then*/
-        //fill gant in day&hours
-        this.addClass(
-            document.getElementById("name").value,
-            document.getElementById("phone").value,
-            document.getElementById("date").value,
-            document.getElementById("classes").value,
-            document.getElementById("hour_from").value,
-            document.getElementById("hour_to").value,
-            document.getElementById("description").value);
+    onClick() {
+        //if place isn't taken - fill gant with day&hours
+        //and remove item from RequestList
+        if (!this.addClass(
+            this.state.name,
+            this.state.phone,
+            this.state.date,
+            this.state.classes,
+            this.state.hour_from,
+            this.state.hour_to,
+            store.cur_req.description
+        ))
         //remove request from request list
-        removeItem();
+        this.removeItem();
         //close popup gant form
         this.handleClose();
     }
 
-
+    //unshow Modal
     handleClose() {
-        store.popUp = !store.popUp;
-        store.showList = true;
-        this.setState({ show: false });
+        store.popUp = false; //flag to not render GantForm
+        this.setState({state: this.state}); //refresh and unrender component
+        window.location = 'http://localhost:3000/'; //rerender
     }
+
+    //add the class to DB and return true - if there's space for it
+    //else - return false
+    addClass(name, phone, date, _class, hour, hour_to, description) {
+        //store event in DB:
+        const cls_id = this.props.getClassID(_class).payload; //convert class name to its cls_id
+        axios.post('http://localhost:8000/api/assigned_events/', {
+            name: name, phone: phone, date: date, cls_id: cls_id,
+            hour: hour, hour_to: hour_to, description: description
+        }, store.config)
+        //if place is already taken
+            .catch(error => {
+                alert("רשומה תפוסה, אנא נסו שנית.");
+                return false;
+            })
+            //else - fill table according changes
+            .then(response => {
+                this.props.fillTable(store.selectedDate);
+                return true;
+            });
+    }
+
+    removeItem() {
+        //delete request from cornered RequestList
+        axios.delete('http://localhost:8000/api/unassigned_events/' +
+            store.cur_req.date + '/' + store.cur_req.cls_id + '/',
+            store.config)
+            .then(response => {})
+            .catch(error => {
+                console.log(error);
+            });
+        window.location = 'http://localhost:3000/';
+    }
+
 }
 
-const calcHourTo = () => {
-    const hour_send = store.cur_req.hour;
-    let hours = parseInt(hour_send.substring(0,2));
-    let minutes = parseInt(hour_send.substring(3,5));
-    minutes += parseInt(store.cur_req.length);
-    while (minutes >= 60)
-    {
-        hours++;
-        minutes-=60;
-    }
-    return hours.toString()+':'+minutes.toString();
+// Get apps state and pass it as props to UserList
+//      > whenever state changes, the UserList will automatically re-render
+function mapStateToProps(state) {
+    return {
+        name: state.name,
+        phone: state.phone,
+        date: state.date,
+        classes: state.classes,
+        hour_from: state.hour_from,
+        hour_to: state.hour_to
 };
-
-
-function removeItem() {
-    console.log('delete event');
-    //token authentication in HTTP header
-    const token = '7fd658b7b5dbcadac422fa3386285a45e7748e7a';
-    const config = {
-        headers: {'Authorization': 'Token ' + token}
-    };
-    axios.delete('http://localhost:8000/api/events/all/',
-    /*{params: store.cur_req.name},*/ config
-    )
-        .then(response => {
-           console.log(store.cur_req.name + "reqest dealt");
-        })
-        .catch(error => {
-            console.log(error);
-        });
 }
 
-export default GantForm;
+// Get actions and pass them as props to to UserList
+//      > now UserList has this.props.selectUser
+function matchDispatchToProps(dispatch) {
+    return bindActionCreators({fillTable: fillTable, getClassID: getClassID}, dispatch);
+}
+
+//      > UserList is now aware of state and actions
+export default connect(mapStateToProps, matchDispatchToProps)(GantForm);
