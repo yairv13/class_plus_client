@@ -4,9 +4,10 @@ import DatePicker from 'react-day-picker';
 import ClassTable from './ClassTable';
 import RequestList from '../containers/RequestList';
 import {store} from '../index';
-import {fillTable} from "../actions";
+import {fillTable, refreshTable} from "../actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import ReactTooltip from 'react-tooltip'
 
 require('../../scss/style.scss');
 
@@ -22,8 +23,8 @@ class Home extends React.Component{
         this.state = {
             current_day: store.today.substring(5,7),
             current_month: store.today.substring(8,10),
-            current_year: store.today.substring(0,5)
-        }
+            current_year: store.today.substring(0,5),
+        };
     }
 
     render() {
@@ -39,6 +40,7 @@ class Home extends React.Component{
                     </Col>
                     <Col>
                         <ClassTable/>
+                        <ReactTooltip type="warning"/>
                     </Col>
                     <Col> </Col>
                 </Row>
@@ -46,13 +48,16 @@ class Home extends React.Component{
         );
     }
 
+    componentDidMount(){
+        //this.props.refreshTable();
+    }
+
     handleDayClick(day) {
-        if(!saturday(day)) {
+        if (!saturday(day)) {
             //set current day state
             this.setState({current_day: day});
             store.selectedDate = DateFormat(day);
-            //refill table
-            this.props.fillTable(store.selectedDate);
+            this.props.refreshTable();
         }
     }
 
@@ -78,14 +83,14 @@ function DateFormat(day) {
 function mapStateToProps(state) {
     return {
         //YYYY-MM-DD format of DatePicker's selected date
-        date: state.current_year+'-'+state.current_month+'-'+state.current_day
+        date: state.current_year+'-'+state.current_month+'-'+state.current_day,
     };
 }
 
 // Get actions and pass them as props to to UserList
 //      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch) {
-    return bindActionCreators({fillTable}, dispatch);
+    return bindActionCreators({fillTable, refreshTable}, dispatch);
 }
 
 //      > UserList is now aware of state and actions

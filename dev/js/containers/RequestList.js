@@ -19,7 +19,7 @@ class RequestList extends React.Component {
     }
 
     //before rendering - set the state with the latest unassigned requests
-    async componentWillMount() {
+    async componentWillUpdate() {
         await this.getUnassignedRequests().then(req => {
             this.setState({unassigned_requests: req});
         });

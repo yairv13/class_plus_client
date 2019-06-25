@@ -10,25 +10,25 @@ import Row from "react-bootstrap/Row";
 import ReactTooltip from 'react-tooltip'
 import {fillTable, getClassID} from "../actions/index";
 import {store} from '../index'
+import {refreshTable} from "../actions";
 require('../../scss/style.scss');
 
 class ClassTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            classes: classes,
-            hours: hours,
-            class_table: this.buildTable()
+            classes: classes, //Basmach classes
+            hours: hours, //daily study hours
+            class_table: this.buildTable(), //the table of assigned class events
         };
     }
 
-    componentDidMount() {
-        this.props.fillTable(store.selectedDate);
-    }
-
-
     render() {
         return this.state.class_table; //render class table
+    }
+
+    componentDidMount() {
+        refreshTable();
     }
 
     buildTable() {
@@ -49,10 +49,9 @@ class ClassTable extends React.Component {
                         {this.props.classes.map(function (_class, index) {
                             const _id = getClassID(_class.name).payload;
                             return <td key={index}>
-                                <Container id={_id}>
+                                <Container id={_id} data-tip="">
                                     <Row id={_id + hour.time.substring(0, 3) + "00"} data-tip=""
-                                         style={{height: 5, width: 5, marginRight: 15}}>
-                                    </Row>
+                                         style={{height: 5, width: 5, marginRight: 15}}> </Row>
                                     <Row id={_id + hour.time.substring(0, 3) + "15"} data-tip=""
                                          style={{height: 5, width: 5, marginRight: 15}}> </Row>
                                     <Row id={_id + hour.time.substring(0, 3) + "30"} data-tip=""
@@ -65,7 +64,6 @@ class ClassTable extends React.Component {
                     </tr>
                 ))}
                 </tbody>
-                <ReactTooltip />
             </Table>
         );
     }
@@ -84,7 +82,7 @@ function mapStateToProps(state) {
 //      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch) {
     return bindActionCreators({transferClasses: transferClasses, transferHours: transferHours,
-    fillTable: fillTable, getClassID: getClassID}, dispatch);
+    refreshTable: refreshTable, fillTable:fillTable, getClassID: getClassID}, dispatch);
 }
 
 //      > UserList is now aware of state and actions

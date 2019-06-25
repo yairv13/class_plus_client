@@ -11,12 +11,12 @@ export const fillTable = (date) => {
         .then(req => {
             data = req.data;
             //draw the table and keep the rows stored in previous_rows
-            drawTable(data);
+            store.painted_rows = drawTable(data);
         })
         .catch(error => {
             console.log('Error getting assigned requests, ', error);
         });
-    return {
+    return{
         type: 'TABLE_FILLED'
     }
 };
@@ -24,17 +24,36 @@ export const fillTable = (date) => {
 export const submitRequest = (class_request) => {
     axios.post('http://localhost:8000/api/unassigned_events/',
         {
-            name: class_request.name, phone: class_request.phone, date: class_request.date, cls_id: class_request.cls_id,
-            hour: class_request.hour, hour_to: class_request.hour_to, description: class_request.description
+            name: class_request.name,
+            phone: class_request.phone,
+            date: class_request.date,
+            cls_id: class_request.cls_id,
+            hour: class_request.hour,
+            hour_to: class_request.hour_to,
+            description: class_request.description
         }, store.config
     )
-        .then(response => {})
+        .then(response => {
+        })
         .catch(error => {
             alert(error);
         });
     return {
         type: 'REQ_SENT',
         payload: class_request
+    }
+};
+
+export const refreshTable = () => {
+    store.painted_rows.map(row => {
+        console.log("clearing...");
+        row.style.backgroundColor = null;
+    });
+    //fill ClassTable with the selected day's classes
+    //receive all painted rows
+    fillTable(store.selectedDate);
+    return{
+        type: 'REFRESHED_TABLE'
     }
 };
 
@@ -108,10 +127,10 @@ export const getClassID = (_class => {
             default:
                 id = 1;
         }
-        return{
-        type: 'ID_REQUESTED',
-        payload: id
-    }
+        return {
+            type: 'ID_REQUESTED',
+            payload: id
+        }
     }
 );
 
@@ -121,10 +140,14 @@ export const getClassID = (_class => {
 //each collumn contains 4 rows;
 function calcRows(hour, hour_to) {
     //each hour = 4 rows
-    const hoursDiff = (parseInt(hour_to.substring(0, 2)) - parseInt(hour.substring(0, 2)) + 1) * 4;
-    //each 1/4 an hour = 1 row
-    const minsDiff = (parseInt(hour.substring(3, 5)) - parseInt(hour_to.substring(3, 5))) / 15;
-    console.log("rows to paint:" + (hoursDiff+minsDiff));
+    const hours = [parseInt(hour_to.substring(0, 2)), parseInt(hour.substring(0, 2))];
+    const minutes = [parseInt(hour.substring(3, 5)), parseInt(hour.substring(3, 5))];
+    const hoursDiff = (hours[0] - hours[1]) * 4;
+    //each 1/4 an hour = 1
+    let minsDiff = (Math.max(minutes[0], minutes[1]) - Math.min(minutes[0], minutes[1])) / 15;
+    if (minsDiff !== 0)
+        minsDiff--;
+    console.log("rows to paint:" + (hoursDiff + minsDiff));
     return hoursDiff + minsDiff; //add or subtract in accordance to the case
 }
 
@@ -142,7 +165,11 @@ function getRandomColor() {
     return "#" + ((1 << 24) * Math.random() | 0).toString(16);
 }
 
+//draw all today's events in the ClassTable
+//return all the painted rows to fillTable
 function drawTable(data) {
+    //all painted rows to-be-returned array
+    let rows_arr = [];
     //draw each event in the class table
     data.map(event => {
             if (event.cls_id === undefined) {
@@ -168,19 +195,22 @@ function drawTable(data) {
                 //get row
                 const row_id = cls_id + time;
                 const row = document.getElementById(row_id);
-                console.log(row);
                 //paint raw
                 if (row) {
+                    //push current row to rows_arr
+                    rows_arr.push(row);
                     //random paint for each class
                     row.style.backgroundColor = randomColor;
                     //tool-tip with event details
-                    row.tooltip = "LOL"
-                        //name + '\n' + phone + '\n' + hour + " - " +
-                        //hour_to + '\n' + description;
+                    console.log("tooltip:" + row.tooltip); //TODO: fix
+                    //name + '\n' + phone + '\n' + hour + " - " +
+                    //hour_to + '\n' + description;
                 }
-                //add 15 minutes to the time
+                //add 15 minutes to the time in order to advance with the drawing
                 time = addQuarter(time);
             }
         }
     );
+    //return all the painted rows
+    return rows_arr;
 }
