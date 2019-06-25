@@ -85,6 +85,10 @@ class RequestForm extends React.Component {
     }
 
     onSubmit() {
+        //don't send if the form is invalid
+        if (!this.formIsValid(this.state.phone, this.state.hour, this.state.hour_to, this.state.date))
+            return;
+        //else - send if valid
         const class_request = {
             name: this.state.name,
             phone: this.state.phone,
@@ -105,17 +109,36 @@ class RequestForm extends React.Component {
             });
     }
 
-    //validate form fields
+    //validate form fields during its completion
     fieldIsValid(target) {
         const value = target.value;
         switch (target.type) {
             case 'tel':
                 return (value[0] === "0" && value.length < 20);
             case 'time':
-                return ("09:00" <= value && value <= "22:00");
+                return ("09:00" <= value && value <= "22:00" && value.substring(3,5)%15===0);
             case 'date':
                 return (store.next_year >= value && value >= store.today);
         }
+        return true;
+    }
+
+    //final validation of form before its submitting
+    formIsValid(phone, hour, hour_to, date) {
+        console.log(hour.substring(3,5)%15);
+        //validate phone
+        if (phone[0] !== "0" || phone.length > 20 || phone.length < 9)
+            return false;
+        // //validate begining hour
+        if("09:00" > hour || hour > "22:00" || hour > hour_to-15 || hour.substring(3,5)%15!==0)
+            return false;
+        // //validate finishing hour
+        if("09:00" > hour_to || hour_to > "22:00" || hour_to < hour+15 || hour.substring(3,5)%15!==0)
+            return false;
+        // //validate date
+        if(store.next_year < date || date < store.today)
+            return false;
+        //return true if form is valid
         return true;
     }
 }
