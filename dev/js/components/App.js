@@ -24,7 +24,6 @@ const App = () =>
 
 
 function setStoreValues() {
-    store.showList = true; //show RequestList or not
     store.popUp = false; //show Gant form or not
     store.cur_req = {}; //current request to be filled in the gant [from RequestList to GantForm]
     //http authorization headers

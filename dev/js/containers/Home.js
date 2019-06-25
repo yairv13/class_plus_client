@@ -36,7 +36,7 @@ class Home extends React.Component{
                                     onDayClick={this.handleDayClick}
                                     onMonthChange={this.handleMonthChange}
                         />
-                        {store.showList && <RequestList/>}
+                        {<RequestList/>}
                     </Col>
                     <Col>
                         <ClassTable/>

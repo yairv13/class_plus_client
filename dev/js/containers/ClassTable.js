@@ -49,15 +49,15 @@ class ClassTable extends React.Component {
                         {this.props.classes.map(function (_class, index) {
                             const _id = getClassID(_class.name).payload;
                             return <td key={index}>
-                                <Container id={_id} data-tip="">
+                                <Container id={_id}>
                                     <Row id={_id + hour.time.substring(0, 3) + "00"} data-tip=""
-                                         style={{height: 5, width: 5, marginRight: 15}}> </Row>
+                                         style={{height: 5, width: 15, marginRight: 0}}> </Row>
                                     <Row id={_id + hour.time.substring(0, 3) + "15"} data-tip=""
-                                         style={{height: 5, width: 5, marginRight: 15}}> </Row>
+                                         style={{height: 5, width: 15, marginRight: 0}}> </Row>
                                     <Row id={_id + hour.time.substring(0, 3) + "30"} data-tip=""
-                                         style={{height: 5, width: 5, marginRight: 15}}> </Row>
+                                         style={{height: 5, width: 15, marginRight: 0}}> </Row>
                                     <Row id={_id + hour.time.substring(0, 3) + "45"} data-tip=""
-                                         style={{height: 5, width: 5, marginRight: 15}}> </Row>
+                                         style={{height: 5, width: 15, marginRight: 0}}> </Row>
                                 </Container>
                             </td>
                         })}

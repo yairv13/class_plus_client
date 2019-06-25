@@ -34,6 +34,7 @@ export const submitRequest = (class_request) => {
         }, store.config
     )
         .then(response => {
+
         })
         .catch(error => {
             alert(error);
@@ -48,6 +49,7 @@ export const refreshTable = () => {
     store.painted_rows.map(row => {
         console.log("clearing...");
         row.style.backgroundColor = null;
+        row.setAttribute("data-tip", "");
     });
     //fill ClassTable with the selected day's classes
     //receive all painted rows
@@ -141,13 +143,10 @@ export const getClassID = (_class => {
 function calcRows(hour, hour_to) {
     //each hour = 4 rows
     const hours = [parseInt(hour_to.substring(0, 2)), parseInt(hour.substring(0, 2))];
-    const minutes = [parseInt(hour.substring(3, 5)), parseInt(hour.substring(3, 5))];
+    const minutes = [parseInt(hour_to.substring(3, 5)), parseInt(hour.substring(3, 5))];
     const hoursDiff = (hours[0] - hours[1]) * 4;
     //each 1/4 an hour = 1
     let minsDiff = (Math.max(minutes[0], minutes[1]) - Math.min(minutes[0], minutes[1])) / 15;
-    if (minsDiff !== 0)
-        minsDiff--;
-    console.log("rows to paint:" + (hoursDiff + minsDiff));
     return hoursDiff + minsDiff; //add or subtract in accordance to the case
 }
 
@@ -166,7 +165,7 @@ function getRandomColor() {
 }
 
 //draw all today's events in the ClassTable
-//return all the painted rows to fillTable
+//ret`urn all the painted rows to fillTable
 function drawTable(data) {
     //all painted rows to-be-returned array
     let rows_arr = [];
@@ -202,9 +201,8 @@ function drawTable(data) {
                     //random paint for each class
                     row.style.backgroundColor = randomColor;
                     //tool-tip with event details
-                    console.log("tooltip:" + row.tooltip); //TODO: fix
-                    //name + '\n' + phone + '\n' + hour + " - " +
-                    //hour_to + '\n' + description;
+                    row.setAttribute("data-tip",name + ' ' + phone + ' ' + hour + " - " +
+                    hour_to + " " + description);
                 }
                 //add 15 minutes to the time in order to advance with the drawing
                 time = addQuarter(time);

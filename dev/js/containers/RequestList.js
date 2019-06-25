@@ -19,7 +19,7 @@ class RequestList extends React.Component {
     }
 
     //before rendering - set the state with the latest unassigned requests
-    async componentWillUpdate() {
+    async componentWillMount() {
         await this.getUnassignedRequests().then(req => {
             this.setState({unassigned_requests: req});
         });
@@ -80,7 +80,7 @@ class RequestList extends React.Component {
 
 //select next label color
 function nextVariant(index) {
-    switch (index + 3 % 7) {
+    switch ((index + 3) % 7) {
         case 0:
             return "light";
         case 1:

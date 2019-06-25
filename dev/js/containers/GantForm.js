@@ -53,6 +53,8 @@ class GantForm extends React.Component {
                             <option value="כיתה י">כיתה י</option>
                             <option value="כיתה יא">כיתה יא</option>
                             <option value="כיתה יב">כיתה יב</option>
+                            <option value="כיתה יג">כיתה יג</option>
+                            <option value="כיתה יד">כיתה יד</option>
                         </select>
                         <input id="hour_from" name="hour_from" className="form-control" type="time"
                                required onChange={this.onChange} value={this.state.hour_from}
@@ -98,6 +100,7 @@ class GantForm extends React.Component {
     handleClose() {
         store.popUp = false; //flag to not render GantForm
         this.setState({state: this.state}); //refresh and unrender component
+        window.location = 'http://localhost:3000/'; //rerender
     }
 
     //add the class to DB and return true - if there's space for it
@@ -130,6 +133,7 @@ class GantForm extends React.Component {
             .catch(error => {
                 console.log(error);
             });
+        window.location = 'http://localhost:3000/';
     }
 
 }
